@@ -157,16 +157,18 @@ console.log( 'server started on ' + port + ' ...' );
 ```jsonobject.js
 // jsonobject.js
 var obj = {
-  'name1': 1,
-  'name2': 'b',
-  'name3': [ 1, 2, 3.45, 'abc', true ]
+  name1: 1,
+  name2: 'b',
+  name3: { key1: 'name3-key1' },
+  name4: [ 1, 2, 3.45, 'abc', true ]
 };
 
 console.log( obj.name1 );
 console.log( obj['name2'] );
-console.log( obj.name3.length );
-for( var i = 0; i < obj.name3.length; i ++ ){
-  console.log( obj.name3[i] );
+console.log( obj.name3.key1 );
+console.log( obj.name4.length );
+for( var i = 0; i < obj.name4.length; i ++ ){
+  console.log( obj.name4[i] );
 }
 ```
 
@@ -376,6 +378,57 @@ console.log( 'server started on ' + port + ' ...' );
 </head>
 <body>
 <%- body %>
+</body>
+</html>
+```
+
++++
+
+## テンプレートに配列を渡す
+
++++
+
+```app.js
+// app.js
+var express = require( 'express' );
+var cfenv = require( 'cfenv' );
+var ejs = require( 'ejs' );
+var fs = require( 'fs' );
+var app = express();
+
+app.get( '/hello', function( req, res ){
+  res.write( 'Hello. It works!' );
+  res.end();
+});
+
+app.get( '/list', function( req, res ){
+  var template = fs.readFileSync( __dirname + '/list.ejs', 'utf-8' );
+  var values = [ 1, 3, 4, 10, 2, -5 ];
+  var p = ejs.render( template, { title: 'EJS', values: values );
+  res.write( p );
+  res.end();
+});
+
+var appEnv = cfenv.getAppEnv();
+var port = appEnv.port | 3000;
+app.listen( port );
+console.log( 'server started on ' + port + ' ...' );
+```
+
++++
+
+```list.ejs
+<!-- list.ejs -->
+<html>
+<head>
+<title><%= title %></title>
+</head>
+<body>
+<ul>
+<% for( var i = 0; i < values.length; i ++ ){ %>
+<li><%= values[i] %></li>
+<% } %>
+</ul>
 </body>
 </html>
 ```
