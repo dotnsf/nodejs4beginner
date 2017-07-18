@@ -312,3 +312,72 @@ console.log( 'server started on ' + port + ' ...' );
 ```
 
 +++
+
+## ポート番号自動化
+
++++
+
+```app.js
+// app.js
+var express = require( 'express' );
+var cfenv = require( 'cfenv' );
+var app = express();
+
+app.get( '/hello', function( req, res ){
+  res.write( 'Hello. It works!' );
+  res.end();
+});
+
+var appEnv = cfenv.getAppEnv();
+var port = appEnv.port | 3000;
+app.listen( port );
+console.log( 'server started on ' + port + ' ...' );
+```
+
++++
+
+## テンプレート
+
++++
+
+```app.js
+// app.js
+var express = require( 'express' );
+var cfenv = require( 'cfenv' );
+var ejs = require( 'ejs' );
+var fs = require( 'fs' );
+var app = express();
+
+app.get( '/hello', function( req, res ){
+  res.write( 'Hello. It works!' );
+  res.end();
+});
+
+app.get( '/list', function( req, res ){
+  var template = fs.readFileSync( __dirname + '/list.ejs', 'utf-8' );
+  var p = ejs.render( template, { title: 'EJS', body: '<h1>Hello, EJS</h1>' );
+  res.write( p );
+  res.end();
+});
+
+var appEnv = cfenv.getAppEnv();
+var port = appEnv.port | 3000;
+app.listen( port );
+console.log( 'server started on ' + port + ' ...' );
+```
+
++++
+
+```list.ejs
+<!-- list.ejs -->
+<html>
+<head>
+<title><%= title %></title>
+</head>
+<body>
+<%- body %>
+</body>
+</html>
+```
+
++++
