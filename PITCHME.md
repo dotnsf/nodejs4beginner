@@ -1,70 +1,10 @@
 # はじめての Node.js 
 
-
-
-+++
-
-## Node.js
-
-### サーバーサイド JavaScript
-
-- シングルスレッド　＆　非同期処理
-
-- npm(node package manager) によるパッケージ管理
-
-    - [npm](https://www.npmjs.com/)
-
-    - 便利な非標準機能を簡単に探してインストールする仕組み
-
-        - HTTPサーバー、認証、圧縮／展開、画像処理、ファイルアップロード、テンプレート、・・
-
-### 特徴
-
-- 非同期実行による高速（に見える）処理
-
-    - ディスク読み書きなどの時間のかかる処理では終了を待たずに次の処理を行うことができる
-
-    - （待ち時間を最小化することができるので）CPU を効率的に利用できる
-
-- 非同期実行の制御が特徴的
-
-    - イベントの終了タイミングを意識する必要がある
-
-+++
-
-## インストール
-
-### [メインページ](https://nodejs.org/) からダウンロードなど
-
-- Windows : 上記ページよりバイナリをダウンロード＆インストール
-
-- RedHat/CentOS : epel リポジトリから nodejs と npm をインストール
-
-    - (epel) $ sudo yum install epel-release
-
-    - (nodejs, npm) $ sudo yum install nodejs npm
-
-- Ubuntu/Raspbian : （普通に）nodejs と npm をインストール
-
-    - (nodejs, npm) $ sudo apt-get install nodejs npm
-
-- Mac OS X : nodebrew からインストール
-
-    - (homebrew) $ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-
-    - (nodebrew) $ brew install nodebrew
-
-    - (nodejs, npm) $ nodebrew install-binary latest
-
 +++
 
 ## ハローワールド
 
-### 以下の内容を hello.js というファイル名で作成
-
-- $ node hello
-
-    - 「ハローワールド」と出力されれば成功
++++
 
 ```hello.js
 // hello.js
@@ -73,13 +13,9 @@ console.log( 'ハローワールド' );
 
 +++
 
-## 1 から 100 まで合算
+## 1 から 100 までの合算
 
-### 以下の内容を sum.js というファイル名で作成
-
-- $ node sum
-
-    - 5050 と出力されれば成功
++++
 
 ```sum.js
 // sum.js
@@ -95,9 +31,7 @@ console.log( 'sum = ' + sum );
 
 ## 1000 以下の素数
 
-### 以下の内容を primenum.js というファイル名で作成
-
-- $ node primenum
++++
 
 ```primenum.js
 // primenum.js
@@ -123,13 +57,7 @@ function isPrimeNum( x ){
 
 ## Express を使ったウェブアプリケーション
 
-### 以下の内容を app.js というファイル名で作成
-
-- $ npm install express
-
-- $ node app
-
-    - ウェブブラウザで http://localhost:3000/hello にアクセスし、'Hello. It works!' と表示されれば成功
++++
 
 ```app.js
 // app.js
@@ -150,13 +78,7 @@ console.log( 'server started on ' + port + ' ...' );
 
 ## スタティックコンテンツ対応
 
-- $ mkdir public
-
-### 以下の内容を app.js , public/index.html というファイル名で作成
-
-- $ node app
-
-- ウェブブラウザで http://localhost:3000/ にアクセスし、入力フォームが表示されれば成功
++++
 
 ```app.js
 // app.js
@@ -174,6 +96,8 @@ var port = 3000;
 app.listen( port );
 console.log( 'server started on ' + port + ' ...' );
 ```
+
++++
 
 ```public/index.html
 <!-- public/index.html -->
@@ -196,17 +120,195 @@ console.log( 'server started on ' + port + ' ...' );
 
 ## ポストデータを受け取る
 
++++
+
+```app.js
+// app.js
+var express = require( 'express' );
+var bodyParser = require( 'body-parser' );
+var app = express();
+
+app.use( bodyParser.urlencoded( { extended: true } ) );
+app.use( bodyParser.json() );
+app.use( express.static( __dirname + '/public' ) );
+
+app.get( '/hello', function( req, res ){
+  res.write( 'Hello. It works!' );
+  res.end();
+});
+
+app.post( '/show', function( req,res ){
+  var text = req.body.text;
+  res.write( 'You wrote: ' + text );
+  res.end();
+});
+
+var port = 3000;
+app.listen( port );
+console.log( 'server started on ' + port + ' ...' );
+```
 
 +++
 
-
-
-+++
-
-
+## JSON(JavaScript Object Notation) オブジェクト
 
 +++
 
+```jsonobject.js
+// jsonobject.js
+var obj = {
+  'name1': 1,
+  'name2': 'b',
+  'name3': [ 1, 2, 3.45, 'abc', true ]
+};
 
+console.log( obj.name1 );
+console.log( obj['name2'] );
+console.log( obj.name3.length );
+for( var i = 0; i < obj.name3.length; i ++ ){
+  console.log( obj.name3[i] );
+}
+```
 
++++
 
+## ファイル読み込み（１）
+
++++
+
+```readfile.js
+// readfile.js
+var fs = require( 'fs' );
+
+fs.readFile( './aaa.xml', function( err, data ){
+  if( err ){
+    console.log( 'Error: ' + err );
+  }else{
+    console.log( data.toString() );
+  }
+});
+console.log( 'end' );
+```
+
++++
+
+## ファイル読み込み（２）
+
++++
+
+```aaa.xml
+<?xml version="1.0"?>
+<score-partwise>
+ <work>
+  <work-title>Do-re-mi</work-title>
+ </work>
+ <part-lit>
+  <score-part id="P1">
+   <part-name>Piano</part-name>
+  </score-part>
+ </part-lit>
+</score-partwise>
+```
+
++++
+
+## ファイル読み込み（３）
+
++++
+
+```readfile.js
+// readfile.js
+var fs = require( 'fs' );
+var xml2js = require( 'xml2js' );
+
+fs.readFile( './aaa.xml', function( err, data ){
+  if( err ){
+    console.log( 'Error: ' + err );
+  }else{
+    xml2js.parseString( data.toString(), function( err, result ){
+      if( err ){
+        console.log( 'Error: ' + err );
+      }else{
+        console.log( JSON.stringify( result, 2, null ) );
+        //console.log( result['score-partwise']['work'][0]['work-title'][0] );
+      }
+    });
+  }
+});
+console.log( 'end' );
+```
+
++++
+
+## ファイルアップロード
+
++++
+
+```public/upload.html
+<!-- public/upload.html -->
+<html>
+<head>
+<title>Upload</title>
+</head>
+<body>
+<h1>Upload</h1>
+<hr/>
+<form action="/upload" method="post" enctype="multipart/form-data">
+<input type="file" name="music"/>
+<input type="submit" value="送信"/>
+</form>
+</body>
+</html>
+```
+
++++
+
+```app.js
+// app.js
+var express = require( 'express' );
+var bodyParser = require( 'body-parser' );
+var fs = require( 'fs' );
+var xml2js = require( 'xml2js' );
+var multer = require( 'multer' );
+var app = express();
+
+app.use( multer( { dest: './tmp/' } ).single( 'music' ) );
+app.use( bodyParser.urlencoded( { extended: true } ) );
+app.use( bodyParser.json() );
+app.use( express.static( __dirname + '/public' ) );
+
+app.get( '/hello', function( req, res ){
+  res.write( 'Hello. It works!' );
+  res.end();
+});
+
+app.post( '/show', function( req,res ){
+  var text = req.body.text;
+  res.write( 'You wrote: ' + text );
+  res.end();
+});
+
+app.post( '/upload', function( req,res ){
+  var originalname = req.file.originalname;
+  var path = req.file.path;
+  if( originalname.endsWith( '.xml' ) ){
+    fs.readFile( path, function( err, data ){
+      xml2js.parseString( data.toString(), function( err, result ){
+        res.write( result['score-partwise']['work'][0]['work-title'][0] );
+        res.end();
+      });
+      fs.unlink( path, function( err ){} );
+    });
+  }else{
+    fs.unlink( path, function( err ){} );
+    res.write( 'Error: not XML file.' );
+    res.end();
+  }
+});
+
+var port = 3000;
+app.listen( port );
+console.log( 'server started on ' + port + ' ...' );
+```
+
++++
